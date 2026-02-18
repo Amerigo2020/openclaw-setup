@@ -1,7 +1,9 @@
 # OpenClaw Setup Instructions
 
-This file contains the actual steps to set up OpenClaw.
+This file contains the steps to set up OpenClaw on a Hetzner server.
 Claude Code or Codex can read and execute these steps automatically.
+
+**Official docs:** https://docs.openclaw.ai/start/getting-started
 
 ---
 
@@ -22,47 +24,52 @@ Claude Code or Codex can read and execute these steps automatically.
 ssh root@<SERVER_IP>
 ```
 
-## Step 3: Install Dependencies
+## Step 3: Install Node.js 22+
+
+OpenClaw requires Node ≥22.
 
 ```bash
 # Update system
 apt update && apt upgrade -y
 
-# Install Node.js 20+
-curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+# Install Node.js 22
+curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 apt install -y nodejs
 
-# Install Python (for some plugins)
-apt install -y python3 python3-pip python3-venv git curl
+# Verify version
+node --version  # Should be v22.x.x
 ```
 
 ## Step 4: Install OpenClaw
 
 ```bash
-npm install -g openclaw
+npm install -g openclaw@latest
 ```
 
-## Step 5: Run OpenClaw Setup Wizard
+## Step 5: Run Onboarding Wizard
 
 ```bash
-openclaw
+openclaw onboard --install-daemon
 ```
 
-This will:
-1. Create the `.openclaw` directory
-2. Ask you to configure your LLM provider (use Google/Gemini - free tier)
-3. Set up the WhatsApp plugin
-4. Show a QR code to scan with your phone
+The wizard will:
+1. Set up the Gateway daemon (systemd service)
+2. Ask you to configure your LLM provider
+3. Set up channels (WhatsApp, Telegram, etc.)
+4. Guide you through authentication
 
-## Step 6: Configure Google/Gemini API
+## Step 6: Configure LLM Provider
 
-When prompted, add your Gemini API key:
+**Recommended:** Anthropic Pro/Max subscription (best quality)
 
+**Free option:** Google Gemini API
 1. Go to https://aistudio.google.com/apikey
 2. Create API key
-3. Enter it when openclaw asks
+3. Enter when prompted by wizard
 
 ## Step 7: Connect WhatsApp
+
+During the wizard, when you enable WhatsApp:
 
 1. A QR code will appear in the terminal
 2. Open WhatsApp on your phone
@@ -70,90 +77,76 @@ When prompted, add your Gemini API key:
 4. Scan the QR code
 5. Done!
 
-## Step 8: Run as Background Service
+## Step 8: Verify Setup
 
 ```bash
-# Create systemd service
-cat > /etc/systemd/system/openclaw.service << 'EOF'
-[Unit]
-Description=OpenClaw AI Assistant
-After=network.target
+# Check health
+openclaw doctor
 
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/root
-ExecStart=/usr/bin/openclaw
-Restart=always
-RestartSec=10
-Environment=NODE_ENV=production
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Enable and start
-systemctl daemon-reload
-systemctl enable openclaw
-systemctl start openclaw
-```
-
-## Step 9: Check Status
-
-```bash
-systemctl status openclaw
-```
-
-## Configuration Files
-
-After setup, your config lives at `/root/.openclaw/`:
-
-```
-.openclaw/
-├── openclaw.json      # Main config
-├── agents/            # Your agents
-├── credentials/       # API keys
-├── memory/            # Agent memory
-├── workspace/         # Working files
-└── venv/              # Python environment
-```
-
-## Verification
-
-1. Send a message to yourself on WhatsApp
-2. OpenClaw should respond
-3. Try: "What can you do?"
-
-## Useful Commands
-
-```bash
 # Check version
 openclaw --version
-
-# Run doctor (check health)
-openclaw doctor
 
 # View logs
 journalctl -u openclaw -f
 ```
 
-## Current Setup (Federico's)
+## Step 9: Send Test Message
 
-- Server: Hetzner CX22
-- OpenClaw: v2026.2.15
-- LLM: Google Gemini (free tier)
-- Plugins: WhatsApp enabled
-- Agents: main, opendraft
+```bash
+# Via CLI
+openclaw agent --message "Hello, what can you do?"
+
+# Or just message yourself on WhatsApp
+```
+
+## Useful Commands
+
+```bash
+# Run onboarding again
+openclaw onboard
+
+# Health check
+openclaw doctor
+
+# Update to latest
+openclaw update
+
+# Gateway status
+systemctl status openclaw
+```
+
+## Configuration
+
+Config lives at `~/.openclaw/`:
+
+```
+.openclaw/
+├── openclaw.json      # Main config
+├── agents/            # Your agents
+├── credentials/       # API keys (encrypted)
+├── memory/            # Agent memory
+├── workspace/         # Working files
+└── logs/              # Logs
+```
+
+## Resources
+
+- **Docs:** https://docs.openclaw.ai
+- **Getting Started:** https://docs.openclaw.ai/start/getting-started
+- **Channels:** https://docs.openclaw.ai/channels
+- **WhatsApp:** https://docs.openclaw.ai/channels/whatsapp
+- **Discord:** https://discord.gg/clawd
 
 ---
 
 ## Notes for Claude Code
 
 When executing these steps:
-1. Ask the user for their Hetzner credentials or guide them to create an account
-2. SSH into the server and run the install commands
-3. Guide them through the openclaw wizard
-4. Help them get their Gemini API key
-5. Wait for them to scan the WhatsApp QR code
-6. Set up the systemd service for 24/7 operation
-7. Verify everything works
+1. Create Hetzner server (or use user's existing VPS)
+2. SSH in and install Node.js 22+
+3. Run `npm install -g openclaw@latest`
+4. Run `openclaw onboard --install-daemon`
+5. Guide user through the wizard prompts
+6. Help them get API keys if needed
+7. Wait for WhatsApp QR scan
+8. Run `openclaw doctor` to verify
