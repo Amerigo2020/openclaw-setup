@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw WhatsApp Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0b141a;
+      width: 400px;
+      height: 700px;
+    }
+    .phone {
+      background: #0b141a;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: #1f2c34;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .back-arrow {
+      color: #00a884;
+      font-size: 20px;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #00a884, #25d366);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .contact-info {
+      flex: 1;
+    }
+    .contact-name {
+      color: #e9edef;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .contact-status {
+      color: #8696a0;
+      font-size: 13px;
+    }
+    .header-icons {
+      display: flex;
+      gap: 20px;
+      color: #aebac1;
+      font-size: 20px;
+    }
+    .chat {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23091418" width="100" height="100"/></svg>');
+    }
+    .message {
+      max-width: 85%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .message.sent {
+      background: #005c4b;
+      margin-left: auto;
+      border-bottom-right-radius: 0;
+    }
+    .message.received {
+      background: #1f2c34;
+      margin-right: auto;
+      border-bottom-left-radius: 0;
+    }
+    .message-text {
+      color: #e9edef;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .message-time {
+      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+      text-align: right;
+      margin-top: 4px;
+    }
+    .message.sent .message-time {
+      color: rgba(255,255,255,0.6);
+    }
+    .day-divider {
+      text-align: center;
+      margin: 16px 0;
+    }
+    .day-divider span {
+      background: #182229;
+      color: #8696a0;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+    .input-area {
+      background: #1f2c34;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .input-box {
+      flex: 1;
+      background: #2a3942;
+      border-radius: 24px;
+      padding: 10px 16px;
+      color: #e9edef;
+      font-size: 14px;
+    }
+    .send-btn {
+      width: 44px;
+      height: 44px;
+      background: #00a884;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+    }
+    .check {
+      color: #53bdeb;
+      font-size: 14px;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="header">
+      <span class="back-arrow">←</span>
+      <div class="avatar">🦞</div>
+      <div class="contact-info">
+        <div class="contact-name">OpenClaw</div>
+        <div class="contact-status">online</div>
+      </div>
+      <div class="header-icons">
+        <span>📹</span>
+        <span>📞</span>
+        <span>⋮</span>
+      </div>
+    </div>
+
+    <div class="chat">
+      <div class="day-divider"><span>Today</span></div>
+
+      <div class="message sent">
+        <div class="message-text">What's on my GitHub today?</div>
+        <div class="message-time">09:41 <span class="check">✓✓</span></div>
+      </div>
+
+      <div class="message received">
+        <div class="message-text">📊 <strong>Your GitHub summary:</strong><br><br>
+• 3 open PRs need review<br>
+• Issue #42 assigned to you (bug fix)<br>
+• CI passed on main branch<br><br>
+Want me to summarize any specific PR?</div>
+        <div class="message-time">09:41</div>
+      </div>
+
+      <div class="message sent">
+        <div class="message-text">Summarize PR #47</div>
+        <div class="message-time">09:42 <span class="check">✓✓</span></div>
+      </div>
+
+      <div class="message received">
+        <div class="message-text">📝 <strong>PR #47: Add user authentication</strong><br><br>
+Author: @teammate<br>
++423 / -12 lines<br><br>
+Adds JWT auth with refresh tokens. Tests passing. Ready for review.<br><br>
+Should I approve it?</div>
+        <div class="message-time">09:42</div>
+      </div>
+
+      <div class="message sent">
+        <div class="message-text">Yes, approve and merge</div>
+        <div class="message-time">09:43 <span class="check">✓✓</span></div>
+      </div>
+
+      <div class="message received">
+        <div class="message-text">✅ Done! PR #47 approved and merged to main.</div>
+        <div class="message-time">09:43</div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <span>😊</span>
+      <div class="input-box">Type a message</div>
+      <div class="send-btn">🎤</div>
+    </div>
+  </div>
+</body>
+</html>

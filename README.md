@@ -10,6 +10,10 @@
 
 ## What is OpenClaw?
 
+<p align="center">
+  <img src="assets/whatsapp-demo.png" alt="OpenClaw WhatsApp Demo" width="300">
+</p>
+
 OpenClaw is an open-source AI assistant that runs on your own server. Unlike ChatGPT or Claude, it:
 
 - **Runs 24/7** on a cheap VPS (~€5/month)
